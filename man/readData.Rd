@@ -23,3 +23,8 @@ A list with 3 components:
 \description{
 Reading data from zdevice
 }
+\examples{
+dat <- readData(system.file('extdata','example_data.txt', package='zdeviceR'))
+sound_data <- dat[['Sound']]
+motion_data <- dat[['Motion']]
+}

@@ -10,9 +10,13 @@
 #'        \item Sound: A data.frame with time and sound data
 #'        \item Motion: A data.frame with time and motion data (x, y, and z axes)}
 #'
+#' @import magrittr
 #' @export
 #'
 #' @examples
+#' dat <- readData(system.file('extdata','example_data.txt', package='zdeviceR'))
+#' sound_data <- dat[['Sound']]
+#' motion_data <- dat[['Motion']]
 readData <- function(filename, sound_rate=256, accel_rate = 10){
   x <- readLines(filename)
   timestamp <- c('date' = stringr::str_extract(x[2], '\\d{2}/\\d{2}/\\d{2}'),
