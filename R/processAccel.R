@@ -17,8 +17,15 @@ processAccel <- function(accel_dat, rate = 10){
     purrr::map(function(d) {
       tmp <- data.frame(matrix(d, ncol = 3, byrow = T))
       names(tmp) <- c('x','y','z')
-      return(tmp)}) %>%
-    purrr::reduce(rbind)
+      return(tmp)})
+  ind <- which(sapply(accel, nrow) != rate) # Checking for corrupt records
+  if(length(ind)>0){
+    accel <- accel[-ind]  %>%
+      purrr::reduce(rbind)
+    secs <- secs[-ind]
+  } else {
+    accel <- accel %>% purrr::reduce(rbind)
+  }
   Time <- (rep(secs, rep(rate, length(secs)))) + rep(record_times, length(secs))
   out <- cbind('Time' = Time, accel)
   return(out)
