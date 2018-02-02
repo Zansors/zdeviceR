@@ -34,14 +34,23 @@ SignalProcessing <- function(d,
 # Pre-processing ----------------------------------------------------------
 
   if(preprocess == 'ma') d$y1 <- RcppRoll::roll_max(d$y, n = preParams$window,
-                                                    align='center', fill = NA)
+                                                    fill = NA)
   if(preprocess == 'none') d$y1 <- d$y
 
 # Filtering the noise -----------------------------------------------------
 
+  if (filtering == 'gf') d$z <- GaussFilter(d$y1, threshold = filtParams$threshold,
+                                            robust = filtParams$robust)
+  if (filtering == 'lgf') d$z <- LocalGaussFilter(d$y1, threshold = filtParams$threshold,
+                                                  robust = filtParams$robust)
+  if (filtering == 'none') d$z <- d$y1
 
 # Generating the final output ---------------------------------------------
 
+  if (output == 'rmax') d$signal <- RcppRoll::roll_maxr(d$z, n = outputParams$window)
+  if (output == 'rmean') d$signal <- RcppRoll::roll_meanr(d$z, n = outputParams$window)
+  if (output == 'apnea') d$signal <- ApneaSignal(d$z, rate = rate)
+  if (output == 'none') d$signal <- d$z
 
-
+  return(d)
 }
