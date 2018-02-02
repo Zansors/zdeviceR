@@ -23,10 +23,8 @@ SignalProcessing <- function(d,
                              filtParams = list(threshold = 3.5),
                              outputParams = list(window = 256L)){
   names(d) <- c('Time', 'y')
-  d <- case_when(
-    names(thresh_right) == 'stoptime' ~ d[d$Time < thresh_right,],
-    names(thresh_right) == 'last_window' ~ d[1:(nrow(d)-thresh_right),]
-  )
+  if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right,]
+  if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d)-thresh_right),]
   d$y1 <- case_when(
     preprocess == 'ma' ~ RcppRoll::roll_max(d$y, n = preParams$window,
                                             align='center', fill = 'center'),
