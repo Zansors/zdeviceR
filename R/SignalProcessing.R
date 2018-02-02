@@ -15,6 +15,7 @@
 #' @examples
 SignalProcessing <- function(d,
                              rate = 256,
+                             thresh_right = c('stoptime' = 2000, 'last_window' = NULL),
                              preprocess = 'ma',
                              filtering = 'lgf',
                              output='rmax',
@@ -22,11 +23,14 @@ SignalProcessing <- function(d,
                              filtParams = list(threshold = 3.5),
                              outputParams = list(window = 256L)){
   names(d) <- c('Time', 'y')
-  if (preprocess == 'ma') {
-    d$y1 <- RcppRoll::roll_max(d$y, n = preParams$window,
-                               align = 'center', fill = 'center')
-  } else if (preprocess == 'none') {
-    d$y1 <- d$y
-  }
+  d <- case_when(
+    names(thresh_right) == 'stoptime' ~ d[d$Time < thresh_right,],
+    names(thresh_right) == 'last_window' ~ d[1:(nrow(d)-thresh_right),]
+  )
+  d$y1 <- case_when(
+    preprocess == 'ma' ~ RcppRoll::roll_max(d$y, n = preParams$window,
+                                            align='center', fill = 'center'),
+    preprocess == 'none' ~ d$y
+  )
 
 }
