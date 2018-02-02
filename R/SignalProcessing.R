@@ -1,12 +1,14 @@
-#' Title
+#' Signal processing the zdevice signal
 #'
-#' @param d
-#' @param preprocess
-#' @param filtering
-#' @param output
-#' @param preParams
-#' @param filtParams
-#' @param outputParams
+#' @param d A two-column data.frame with the first column being time and the second being signal
+#' @param preprocess Options are 'ma' (Moving average) and 'none'
+#' @param filtering Options are 'lgf' (local Gaussian Filtering), 'gf' (Gaussian Filtering),
+#'   'mgf' (Mixed Gaussian Filtering, not implemented), and 'none'
+#' @param output Options are 'rmean' (running mean), 'rmedian' (running median),
+#'   'apnea', and 'none'
+#' @param preParams Parameters for the chosen preprocess method, as a list
+#' @param filtParams Parameters for the chosen filtering method, as a list
+#' @param outputParams Parameters for the chosen output method, as a list
 #'
 #' @import RcppRoll
 #' @return
@@ -23,12 +25,23 @@ SignalProcessing <- function(d,
                              filtParams = list(threshold = 3.5),
                              outputParams = list(window = 256L)){
   names(d) <- c('Time', 'y')
+
+# Right threshold ---------------------------------------------------------
+
   if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right,]
   if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d)-thresh_right),]
-  d$y1 <- case_when(
-    preprocess == 'ma' ~ RcppRoll::roll_max(d$y, n = preParams$window,
-                                            align='center', fill = 'center'),
-    preprocess == 'none' ~ d$y
-  )
+
+# Pre-processing ----------------------------------------------------------
+
+  if(preprocess == 'ma') d$y1 <- RcppRoll::roll_max(d$y, n = preParams$window,
+                                                    align='center', fill = NA)
+  if(preprocess == 'none') d$y1 <- d$y
+
+# Filtering the noise -----------------------------------------------------
+
+
+# Generating the final output ---------------------------------------------
+
+
 
 }
