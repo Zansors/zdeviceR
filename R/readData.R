@@ -19,8 +19,9 @@
 #' motion_data <- dat[['Motion']]
 readData <- function(filename, sound_rate=256, accel_rate = 10){
   x <- readLines(filename)
-  timestamp <- c('date' = stringr::str_extract(x[2], '\\d{2}/\\d{2}/\\d{2}'),
-                 'time' = stringr::str_extract(x[2], '\\d{2}:\\d{2}:\\d{2}'))
+  ts_ind <- which(stringr::str_detect(x[1:10],'Recording'))
+  timestamp <- c('date' = stringr::str_extract(x[ts_ind], '\\d{2}/\\d{2}/\\d{2}'),
+                 'time' = stringr::str_extract(x[ts_ind], '\\d{2}:\\d{2}:\\d{2}'))
   dat <- x[-(1:4)]
   sound_dat <- dat[stringr::str_detect(dat,'^A')] %>% processSound
   accel_dat <- dat[stringr::str_detect(dat, '^L')] %>% processAccel
