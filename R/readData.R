@@ -17,6 +17,8 @@
 #' dat <- readData(system.file('extdata','example_data.txt', package='zdeviceR'))
 #' sound_data <- dat[['Sound']]
 #' motion_data <- dat[['Motion']]
+#' start_time <- dat[['timestamp']]
+#'
 readData <- function(filename, sound_rate=256, accel_rate = 10){
   dat <- read_file_cpp2(path.expand(filename))
   dat <- strsplit(dat, '\\r|\\n')[[1]]
