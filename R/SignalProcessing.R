@@ -9,6 +9,9 @@
 #' @param preParams Parameters for the chosen preprocess method, as a list
 #' @param filtParams Parameters for the chosen filtering method, as a list
 #' @param outputParams Parameters for the chosen output method, as a list
+#' @param rate Sampling rate for the signal
+#' @param thresh_right Threshold to filter out signal from the end to remove artifacts like
+#'     removing device and the like, that can bias results
 #'
 #' @import RcppRoll
 #' @return
