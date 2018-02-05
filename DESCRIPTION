@@ -5,12 +5,13 @@ Version: 0.1.0
 Authors@R: c(person("Abhijit","Dasgupta", role=c("aut","cre"), email="abhijit@zansors.com"),
   person('Zansors', role='cph', email='info@zansors.com'))
 Maintainer: Abhijit Dasgupta <abhijit@zansors.com>
-Description: This package provides utility functions to extract tidy data sets
+Description: This package provides utility and analytic functions to analyze tidy data sets
     from a zdevice data dump.
 License: MIT
 Depends: R (> 3.1)
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown=TRUE)
 Imports: 
     stringr,
     dplyr,
