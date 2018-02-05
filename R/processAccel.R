@@ -24,7 +24,7 @@ processAccel <- function(accel_dat, rate = 10){
       bind_rows()
     secs <- secs[-ind]
   } else {
-    accel <- accel %>% bind_rows()
+    accel <- accel %>% dplyr::bind_rows()
   }
   Time <- (rep(secs, rep(rate, length(secs)))) + rep(record_times, length(secs))
   out <- cbind('Time' = Time, accel)
