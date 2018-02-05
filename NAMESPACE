@@ -2,5 +2,10 @@
 
 export(SignalProcessing)
 export(readData)
+export(readMotion)
+export(readSound)
+import(Rcpp)
 import(RcppRoll)
 import(magrittr)
+importFrom(Rcpp,evalCpp)
+useDynLib(zdeviceR)
