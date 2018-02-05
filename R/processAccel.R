@@ -19,12 +19,12 @@ processAccel <- function(accel_dat, rate = 10){
       names(tmp) <- c('x','y','z')
       return(tmp)})
   ind <- which(sapply(accel, nrow) != rate) # Checking for corrupt records
-  if(length(ind)>0){
+  if(length(ind) > 0){
     accel <- accel[-ind]  %>%
-      purrr::reduce(rbind)
+      bind_rows()
     secs <- secs[-ind]
   } else {
-    accel <- accel %>% purrr::reduce(rbind)
+    accel <- accel %>% bind_rows()
   }
   Time <- (rep(secs, rep(rate, length(secs)))) + rep(record_times, length(secs))
   out <- cbind('Time' = Time, accel)
