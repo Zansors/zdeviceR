@@ -2,6 +2,7 @@
 
 export(LocalGaussFilter)
 export(SignalProcessing)
+export(find_peaks)
 export(readData)
 export(readMotion)
 export(readSound)
