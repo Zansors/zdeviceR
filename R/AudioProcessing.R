@@ -1,9 +1,10 @@
-#' SignalProcessing
+#' AudioProcessing
 #'
-#' Signal processing the zdevice signal
+#' Signal processing the zdevice audio signal
 #'
 #' This function allows the modular implementation of different pre-processing, filtering
-#' and summarization steps in processing zdevice signal. There are several choices for each of these
+#' and summarization steps in processing zdevice audio signal.
+#' There are several choices for each of these
 #' steps already implemented.
 #'
 #'
@@ -54,7 +55,8 @@
 #' @export
 #'
 #' @examples
-SignalProcessing <- function(d,
+#'
+AudioProcessing <- function(d,
                              rate = 256,
                              thresh_right = c('stoptime' = 2000, 'last_window' = NULL),
                              preprocess = 'none',
@@ -66,10 +68,10 @@ SignalProcessing <- function(d,
   names(d) <- c('Time', 'y')
 
 # Right threshold ---------------------------------------------------------
-
-  if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right,]
-  if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d) - thresh_right),]
-
+  if(length(thresh_right) > 0){
+    if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right,]
+    if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d) - thresh_right),]
+  }
 # Pre-processing ----------------------------------------------------------
 
   if(preprocess == 'ma') d$y1 <- RcppRoll::roll_max(d$y, n = preParams$window * rate,
