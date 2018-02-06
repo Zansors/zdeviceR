@@ -1,7 +1,7 @@
 Package: zdeviceR
 Type: Package
 Title: A R package to extract tidy data from a zdevice data dump
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Abhijit","Dasgupta", role=c("aut","cre"), email="abhijit@zansors.com"),
   person('Zansors', role='cph', email='info@zansors.com'))
 Maintainer: Abhijit Dasgupta <abhijit@zansors.com>
