@@ -1,2 +1,5 @@
 navbar:
   type: inverse
+  right:
+  - icon: fa-github
+  - href: https://github.com/Zansors/zdeviceR
