@@ -13,9 +13,6 @@ GaussFilter(x, threshold, robust = FALSE)
 
 \item{robust}{A logical. Should robust scaling be used (default = FALSE)}
 }
-\value{
-
-}
 \description{
 This function takes a signal, calculates the (robust) Z-transform,
 takes its absolute value, subtracts the threshold and returns the positive

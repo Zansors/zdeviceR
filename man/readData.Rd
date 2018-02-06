@@ -15,10 +15,10 @@ readData(filename, sound_rate = 256, accel_rate = 10)
 }
 \value{
 A list with 3 components:
-   \enumerate{
-       \item timestamp: The timestamp when the recording was started
-       \item Sound: A data.frame with time and sound data
-       \item Motion: A data.frame with time and motion data (x, y, and z axes)}
+\enumerate{
+\item timestamp: The timestamp when the recording was started
+\item Sound: A data.frame with time and sound data
+\item Motion: A data.frame with time and motion data (x, y, and z axes)}
 }
 \description{
 Reading data from zdevice
@@ -27,4 +27,6 @@ Reading data from zdevice
 dat <- readData(system.file('extdata','example_data.txt', package='zdeviceR'))
 sound_data <- dat[['Sound']]
 motion_data <- dat[['Motion']]
+start_time <- dat[['timestamp']]
+
 }

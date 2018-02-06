@@ -2,15 +2,23 @@
 % Please edit documentation in R/SignalProcessing.R
 \name{SignalProcessing}
 \alias{SignalProcessing}
-\title{Signal processing the zdevice signal}
+\title{SignalProcessing}
 \usage{
 SignalProcessing(d, rate = 256, thresh_right = c(stoptime = 2000,
-  last_window = NULL), preprocess = "ma", filtering = "lgf",
-  output = "rmax", preParams = list(window = 256L),
-  filtParams = list(threshold = 3.5), outputParams = list(window = 256L))
+  last_window = NULL), preprocess = "none", filtering = "lgf",
+  output = "rmax", preParams = list(window = 1),
+  filtParams = list(threshold = 3.5, roll_window = 30, robust = FALSE),
+  outputParams = list(window = 1))
 }
 \arguments{
 \item{d}{A two-column data.frame with the first column being time and the second being signal}
+
+\item{rate}{Sampling rate for the signal}
+
+\item{thresh_right}{Threshold to filter out signal from the end to remove artifacts like
+removing device and the like, that can bias results. There are two options:
+1. stoptime: Time (in seconds) from the end when we stop
+2. last_window: which is the last observation (index) to keep (is this good?)}
 
 \item{preprocess}{Options are 'ma' (Moving average) and 'none'}
 
@@ -28,4 +36,57 @@ SignalProcessing(d, rate = 256, thresh_right = c(stoptime = 2000,
 }
 \description{
 Signal processing the zdevice signal
+}
+\details{
+This function allows the modular implementation of different pre-processing, filtering
+and summarization steps in processing zdevice signal. There are several choices for each of these
+steps already implemented.
+
+\strong{Pre-processing}
+\enumerate{
+\item "none" : No pre-processing
+\item "ma" : Run a moving average on the raw signal
+}
+\itemize{
+\item Paraameters are:
+\itemize{
+\item "window" : The width of the moving average window in seconds
+}
+}
+
+\strong{Filtering}
+\enumerate{
+\item "none": No filtering
+\item "gf" : Gaussian filtering
+}
+\itemize{
+\item "threshold": The threshold value beyond which we consider the filtered values to be signal
+\item "robust": Use \code{median} and \code{mad} to scale the data instead of \code{mean} and \code{sd}
+}
+\enumerate{
+\item "lgf": Local Gaussian Filtering (Default)
+}
+\itemize{
+\item "threshold": The threshold value beyond which we consider the filtered values to be signal
+\item "window" : The window for computing the local mean and sd for scaling the data, in seconds
+\item "robust": \emph{not implemented}
+}
+
+\strong{Summarizing}
+\enumerate{
+\item "none" : no summarizing
+\item "rmax" : Moving maximum (Default)
+}
+\itemize{
+\item "window": Window of the moving average in seconds
+}
+\enumerate{
+\item "rmean" : Moving average
+}
+\itemize{
+\item "window": Window of moving average in seconds
+}
+\enumerate{
+\item "apnea" : The apnea detection methodology (not implemented)
+}
 }
