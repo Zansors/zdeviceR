@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Signal processing the zdevice signal — SignalProcessing • zdeviceR</title>
+<title>SignalProcessing — SignalProcessing • zdeviceR</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -39,7 +39,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -75,7 +75,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Signal processing the zdevice signal</h1>
+    <h1>SignalProcessing</h1>
     </div>
 
     
@@ -83,9 +83,10 @@
     
 
     <pre class="usage"><span class='fu'>SignalProcessing</span>(<span class='no'>d</span>, <span class='kw'>rate</span> <span class='kw'>=</span> <span class='fl'>256</span>, <span class='kw'>thresh_right</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='kw'>stoptime</span> <span class='kw'>=</span> <span class='fl'>2000</span>,
-  <span class='kw'>last_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>preprocess</span> <span class='kw'>=</span> <span class='st'>"ma"</span>, <span class='kw'>filtering</span> <span class='kw'>=</span> <span class='st'>"lgf"</span>,
-  <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"rmax"</span>, <span class='kw'>preParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='fl'>256L</span>),
-  <span class='kw'>filtParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>3.5</span>), <span class='kw'>outputParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='fl'>256L</span>))</pre>
+  <span class='kw'>last_window</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>preprocess</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>filtering</span> <span class='kw'>=</span> <span class='st'>"lgf"</span>,
+  <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"rmax"</span>, <span class='kw'>preParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='fl'>1</span>),
+  <span class='kw'>filtParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>threshold</span> <span class='kw'>=</span> <span class='fl'>3.5</span>, <span class='kw'>roll_window</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>robust</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>outputParams</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>window</span> <span class='kw'>=</span> <span class='fl'>1</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -93,6 +94,17 @@
     <tr>
       <th>d</th>
       <td><p>A two-column data.frame with the first column being time and the second being signal</p></td>
+    </tr>
+    <tr>
+      <th>rate</th>
+      <td><p>Sampling rate for the signal</p></td>
+    </tr>
+    <tr>
+      <th>thresh_right</th>
+      <td><p>Threshold to filter out signal from the end to remove artifacts like
+removing device and the like, that can bias results. There are two options:
+1. stoptime: Time (in seconds) from the end when we stop
+2. last_window: which is the last observation (index) to keep (is this good?)</p></td>
     </tr>
     <tr>
       <th>preprocess</th>
@@ -122,13 +134,47 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function allows the modular implementation of different pre-processing, filtering
+and summarization steps in processing zdevice signal. There are several choices for each of these
+steps already implemented.
+    <strong>Pre-processing</strong></p><ol>
+<li><p>"none" : No pre-processing</p></li>
+<li><p>"ma" : Run a moving average on the raw signal</p><ul>
+<li><p>"window" : The width of the moving average window in seconds</p></li>
+</ul></li>
+</ol><p><strong>Filtering</strong></p><ol>
+<li><p>"none": No filtering</p></li>
+<li><p>"gf" : Gaussian filtering</p><ul>
+<li><p>"threshold": The threshold value beyond which we consider the filtered values to be signal</p></li>
+<li><p>"robust": Use <code>median</code> and <code>mad</code> to scale the data instead of <code>mean</code> and <code>sd</code></p></li>
+</ul></li>
+<li><p>"lgf": Local Gaussian Filtering (Default)</p><ul>
+<li><p>"threshold": The threshold value beyond which we consider the filtered values to be signal</p></li>
+<li><p>"window" : The window for computing the local mean and sd for scaling the data, in seconds</p></li>
+<li><p>"robust": <em>not implemented</em></p></li>
+</ul></li>
+</ol><p><strong>Summarizing</strong></p><ol>
+<li><p>"none" : no summarizing</p></li>
+<li><p>"rmax" : Moving maximum (Default)</p><ul>
+<li><p>"window": Window of the moving average in seconds</p></li>
+</ul></li>
+<li><p>"rmean" : Moving average</p><ul>
+<li><p>"window": Window of moving average in seconds</p></li>
+</ul></li>
+<li><p>"apnea" : The apnea detection methodology (not implemented)</p></li>
+</ol>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>
