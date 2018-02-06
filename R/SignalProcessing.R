@@ -11,7 +11,9 @@
 #' @param outputParams Parameters for the chosen output method, as a list
 #' @param rate Sampling rate for the signal
 #' @param thresh_right Threshold to filter out signal from the end to remove artifacts like
-#'     removing device and the like, that can bias results
+#'     removing device and the like, that can bias results. There are two options:
+#'     1. stoptime: Time (in seconds) from the end when we stop
+#'     2. last_window: which is the last observation (index) to keep (is this good?)
 #'
 #' @import RcppRoll
 #' @return
