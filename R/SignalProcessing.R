@@ -11,27 +11,26 @@
 #'
 #' 1. "none" : No pre-processing
 #' 2. "ma" : Run a moving average on the raw signal
-#'   - Paraameters are:
 #'     + "window" : The width of the moving average window in seconds
 #'
 #' **Filtering**
 #'
 #' 1. "none": No filtering
 #' 2. "gf" : Gaussian filtering
-#'   - "threshold": The threshold value beyond which we consider the filtered values to be signal
-#'   - "robust": Use `median` and `mad` to scale the data instead of `mean` and `sd`
+#'     - "threshold": The threshold value beyond which we consider the filtered values to be signal
+#'     - "robust": Use `median` and `mad` to scale the data instead of `mean` and `sd`
 #' 3. "lgf": Local Gaussian Filtering (Default)
-#'   - "threshold": The threshold value beyond which we consider the filtered values to be signal
-#'   - "window" : The window for computing the local mean and sd for scaling the data, in seconds
-#'   - "robust": *not implemented*
+#'     - "threshold": The threshold value beyond which we consider the filtered values to be signal
+#'     - "window" : The window for computing the local mean and sd for scaling the data, in seconds
+#'     - "robust": *not implemented*
 #'
 #' **Summarizing**
 #'
 #' 1. "none" : no summarizing
 #' 2. "rmax" : Moving maximum (Default)
-#'   - "window": Window of the moving average in seconds
+#'     - "window": Window of the moving average in seconds
 #' 3. "rmean" : Moving average
-#'   - "window": Window of moving average in seconds
+#'     - "window": Window of moving average in seconds
 #' 4. "apnea" : The apnea detection methodology (not implemented)
 #'
 #'

@@ -46,9 +46,6 @@ steps already implemented.
 \enumerate{
 \item "none" : No pre-processing
 \item "ma" : Run a moving average on the raw signal
-}
-\itemize{
-\item Paraameters are:
 \itemize{
 \item "window" : The width of the moving average window in seconds
 }
@@ -58,35 +55,29 @@ steps already implemented.
 \enumerate{
 \item "none": No filtering
 \item "gf" : Gaussian filtering
-}
 \itemize{
 \item "threshold": The threshold value beyond which we consider the filtered values to be signal
 \item "robust": Use \code{median} and \code{mad} to scale the data instead of \code{mean} and \code{sd}
 }
-\enumerate{
 \item "lgf": Local Gaussian Filtering (Default)
-}
 \itemize{
 \item "threshold": The threshold value beyond which we consider the filtered values to be signal
 \item "window" : The window for computing the local mean and sd for scaling the data, in seconds
 \item "robust": \emph{not implemented}
+}
 }
 
 \strong{Summarizing}
 \enumerate{
 \item "none" : no summarizing
 \item "rmax" : Moving maximum (Default)
-}
 \itemize{
 \item "window": Window of the moving average in seconds
 }
-\enumerate{
 \item "rmean" : Moving average
-}
 \itemize{
 \item "window": Window of moving average in seconds
 }
-\enumerate{
 \item "apnea" : The apnea detection methodology (not implemented)
 }
 }
