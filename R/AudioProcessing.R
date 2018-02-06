@@ -34,16 +34,30 @@
 #'     - "window": Window of moving average in seconds
 #' 4. "apnea" : The apnea detection methodology (not implemented)
 #'
+#' **Specifying parameters:** One way to specify the parameters in this function call is to create
+#' a YAML file of the parameters and read it with `yaml::read_yaml`. This would get to a nested list
+#' that could be passed as the `params` object. For example::
 #'
+#' ```
+#' pre:
+#'   window: 1
+#' filt:
+#'   robust: FALSE
+#'   threshold: 3
+#'   roll_window: 30
+#' output:
+#'   window: 1
+#'
+#' ```
+
 #' @param d A two-column data.frame with the first column being time and the second being signal
+#'
 #' @param preprocess Options are 'ma' (Moving average) and 'none'
 #' @param filtering Options are 'lgf' (local Gaussian Filtering), 'gf' (Gaussian Filtering),
 #'   'mgf' (Mixed Gaussian Filtering, not implemented), and 'none'
 #' @param output Options are 'rmean' (running mean), 'rmedian' (running median),
 #'   'apnea', and 'none'
-#' @param preParams Parameters for the chosen preprocess method, as a list
-#' @param filtParams Parameters for the chosen filtering method, as a list
-#' @param outputParams Parameters for the chosen output method, as a list
+#' @param params Nested list of parameters, or path to a yaml config file (see Details)
 #' @param rate Sampling rate for the signal
 #' @param thresh_right Threshold to filter out signal from the end to remove artifacts like
 #'     removing device and the like, that can bias results. There are two options:
@@ -62,9 +76,7 @@ AudioProcessing <- function(d,
                              preprocess = 'none',
                              filtering = 'lgf',
                              output='rmax',
-                             preParams = list(window = 1),
-                             filtParams = list(threshold = 3.5, roll_window = 30, robust = FALSE),
-                             outputParams = list(window = 1 )){
+                             params){
   names(d) <- c('Time', 'y')
 
 # Right threshold ---------------------------------------------------------
