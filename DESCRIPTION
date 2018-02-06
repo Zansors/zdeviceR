@@ -8,6 +8,7 @@ Maintainer: Abhijit Dasgupta <abhijit@zansors.com>
 Description: This package provides utility and analytic functions to analyze tidy data sets
     from a zdevice data dump.
 License: MIT
+url: https://github.com/Zansors/zdeviceR
 Depends: R (> 3.1)
 Encoding: UTF-8
 LazyData: true
