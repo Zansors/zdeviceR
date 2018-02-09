@@ -4,20 +4,13 @@
 \alias{AudioProcessing}
 \title{AudioProcessing}
 \usage{
-AudioProcessing(d, rate = 256, thresh_right = c(stoptime = 2000, last_window
-  = NULL), preprocess = "none", filtering = "lgf", output = "rmax",
-  preParams = list(window = 1), filtParams = list(threshold = 3.5,
-  roll_window = 30, robust = FALSE), outputParams = list(window = 1))
+AudioProcessing(d, rate = 256, preprocess = "none", filtering = "lgf",
+  output = "rmax", params)
 }
 \arguments{
 \item{d}{A two-column data.frame with the first column being time and the second being signal}
 
 \item{rate}{Sampling rate for the signal}
-
-\item{thresh_right}{Threshold to filter out signal from the end to remove artifacts like
-removing device and the like, that can bias results. There are two options:
-1. stoptime: Time (in seconds) from the end when we stop
-2. last_window: which is the last observation (index) to keep (is this good?)}
 
 \item{preprocess}{Options are 'ma' (Moving average) and 'none'}
 
@@ -27,11 +20,12 @@ removing device and the like, that can bias results. There are two options:
 \item{output}{Options are 'rmean' (running mean), 'rmedian' (running median),
 'apnea', and 'none'}
 
-\item{preParams}{Parameters for the chosen preprocess method, as a list}
+\item{params}{Nested list of parameters, or path to a yaml config file (see Details)}
 
-\item{filtParams}{Parameters for the chosen filtering method, as a list}
-
-\item{outputParams}{Parameters for the chosen output method, as a list}
+\item{thresh_right}{Threshold to filter out signal from the end to remove artifacts like
+removing device and the like, that can bias results. There are two options:
+1. stoptime: Time (in seconds) from the end when we stop
+2. last_window: which is the last observation (index) to keep (is this good?)}
 }
 \description{
 Signal processing the zdevice audio signal
@@ -79,6 +73,21 @@ steps already implemented.
 \item "window": Window of moving average in seconds
 }
 \item "apnea" : The apnea detection methodology (not implemented)
+}
+
+\strong{Specifying parameters:} One way to specify the parameters in this function call is to create
+a YAML file of the parameters and read it with \code{yaml::read_yaml}. This would get to a nested list
+that could be passed as the \code{params} object. For example::\preformatted{pre:
+  window: 1
+filt:
+  robust: FALSE
+  threshold: 3
+  roll_window: 30
+output:
+  window: 1
+thresh_right:
+  stoptime: 2000
+
 }
 }
 \examples{

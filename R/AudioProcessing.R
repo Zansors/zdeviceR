@@ -47,6 +47,8 @@
 #'   roll_window: 30
 #' output:
 #'   window: 1
+#' thresh_right:
+#'   stoptime: 2000
 #'
 #' ```
 
@@ -72,17 +74,20 @@
 #'
 AudioProcessing <- function(d,
                              rate = 256,
-                             thresh_right = c('stoptime' = 2000, 'last_window' = NULL),
                              preprocess = 'none',
                              filtering = 'lgf',
                              output='rmax',
                              params){
   names(d) <- c('Time', 'y')
+  preParams <- params$pre
+  filtParams <- params$filt
+  outputParams <- params$output
+  thresh_right <- params$thresh_right
 
 # Right threshold ---------------------------------------------------------
   if(length(thresh_right) > 0){
-    if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right,]
-    if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d) - thresh_right),]
+    if(names(thresh_right) == 'stoptime') d <- d[d$Time <= thresh_right$stoptime,]
+    if(names(thresh_right) == 'last_window') d <- d[1:(nrow(d) - thresh_right$last_window),]
   }
 # Pre-processing ----------------------------------------------------------
 
