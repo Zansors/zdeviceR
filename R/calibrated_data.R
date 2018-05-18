@@ -11,5 +11,6 @@ calibrated_data <- function(dat){
   motion <- dat$Motion
   bl = motion
   bl$sound = approx(sound$Time, sound$Sound, xout = motion$Time)$y
+  bl$Mins = bl$Time/60
   return(bl)
 }
