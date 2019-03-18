@@ -4,10 +4,11 @@
 \alias{AudioProcessing}
 \title{AudioProcessing}
 \usage{
-AudioProcessing(d, rate = 256, thresh_right = c(stoptime = 2000, last_window
-  = NULL), preprocess = "none", filtering = "lgf", output = "rmax",
-  preParams = list(window = 1), filtParams = list(threshold = 3.5,
-  roll_window = 30, robust = FALSE), outputParams = list(window = 1))
+AudioProcessing(d, rate = 256, thresh_right = c(stoptime = 2000,
+  last_window = NULL), preprocess = "none", filtering = "lgf",
+  output = "rmax", preParams = list(window = 1),
+  filtParams = list(threshold = 3.5, roll_window = 30, robust = FALSE),
+  outputParams = list(window = 1))
 }
 \arguments{
 \item{d}{A two-column data.frame with the first column being time and the second being signal}

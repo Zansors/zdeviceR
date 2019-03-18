@@ -4,8 +4,6 @@
 \name{zdeviceR}
 \alias{zdeviceR}
 \alias{zdeviceR-package}
-\alias{zdeviceR}
-\alias{zdeviceR-package}
 \title{zdeviceR}
 \description{
 Loading and processing data from zdevice
