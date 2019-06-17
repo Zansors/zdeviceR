@@ -10,7 +10,7 @@ detect_peaks(x, mph = NA, mpd = 1, threshold = 0, edge = "rising",
 \arguments{
 \item{x}{1-d array}
 
-\item{mph}{(NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if \code{valley=F}) or peaks that are smaller than maximum peak height (if \code{valley=T})}
+\item{mph}{(NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if \code{valley=F}) or peaks that are smaller than minimum peak height (if \code{valley=T})}
 
 \item{mpd}{positive integer, optional (default = 1). Detect peaks that are at least separated by minimum peak distance (in number of data)}
 
@@ -32,30 +32,30 @@ Version: 1.0
 }
 \examples{
 
-> from detect_peaks import detect_peaks
-> x = np.random.randn(100)
-> x[60:81] = np.nan
-> # detect all peaks and plot data
-> ind = detect_peaks(x, show=True)
-> print(ind)
+ from detect_peaks import detect_peaks
+ x = rnorm(100)
+ x[60:81] = NA
+ # detect all peaks and plot data
+ ind = detect_peaks(x, show=TRUE)
+ print(ind)
 
-> x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-> # set minimum peak height = 0 and minimum peak distance = 20
-> detect_peaks(x, mph=0, mpd=20, show=True)
+ x = sin(2*pi*5*seq(0,1,length.out=200)) + rnorm(200)/5
+ # set minimum peak height = 0 and minimum peak distance = 20
+ detect_peaks(x, mph=0, mpd=20, show=TRUE)
 
-> x = [0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0]
-> # set minimum peak distance = 2
-> detect_peaks(x, mpd=2, show=True)
+ x = c(0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0)
+ # set minimum peak distance = 2
+ detect_peaks(x, mpd=2, show=TRUE)
 
-> x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-> # detection of valleys instead of peaks
-> detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
+ x = sin(2*pi*5*seq(0, 1, length.out=200)) + rnorm(200)/5
+ # detection of valleys instead of peaks
+ detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
 
-> x = [0, 1, 1, 0, 1, 1, 0]
-> # detect both edges
-> detect_peaks(x, edge='both', show=True)
+ x =c(0, 1, 1, 0, 1, 1, 0)
+ # detect both edges
+ detect_peaks(x, edge='both', show=TRUE)
 
-> x = [-2, 1, -2, 2, 1, 1, 3, 0]
-> # set threshold = 2
-> detect_peaks(x, threshold = 2, show=True)
+ x =c(-2, 1, -2, 2, 1, 1, 3, 0)
+ # set threshold = 2
+ detect_peaks(x, threshold = 2, show=TRUE)
 }

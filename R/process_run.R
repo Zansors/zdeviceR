@@ -16,8 +16,8 @@ process_run <- function(D){
     mutate(avgd2 = as.numeric(roll_mean(avgd, n = 10, fill = NA))) %>%
     mutate_at(vars(x:z), roll_mean, n = 1, fill = NA)
   peaks = data.frame(mins = D$Mins, cadence = rep(0, nrow(D)), respiration = rep(0, nrow(D)))
-  peaks$cadence[find_peaks(D$y)] = 1
-  peaks$respiration[find_peaks(D$avgd2)] <- 1
+  peaks$cadence[detect_peaks(D$y)] = 1
+  peaks$respiration[detect_peaks(D$avgd2, mpd=20)] <- 1
   peaks <- peaks %>% mutate_at(vars(cadence, respiration), roll_sum, n = 600, fill = NA) %>%
     set_names(c('Minutes', 'Cadence', 'Respiration')) %>% as_tibble()
   return(peaks)
