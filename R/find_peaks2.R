@@ -5,7 +5,7 @@
 #' Version: 1.0
 #'
 #' @param x 1-d array
-#' @param mph (NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if `valley=F`) or peaks that are smaller than maximum peak height (if `valley=T`)
+#' @param mph (NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if `valley=F`) or peaks that are smaller than minimum peak height (if `valley=T`)
 #' @param mpd positive integer, optional (default = 1). Detect peaks that are at least separated by minimum peak distance (in number of data)
 #' @param threshold positive number, optional (default = 0). Detect peaks (valleys) that are greater (smaller) than  `threshold` in relation to their immediate neighbors
 #' @param edge One of NA, `rising`, `falling` or `both`, optional (default = `rising`). for a flat peak, keep only the rising edge ('rising'), only the falling edge ('falling'), both edges ('both'), or don't detect a flat peak (None).
@@ -17,32 +17,31 @@
 #'
 #' @examples
 #'
-#' > from detect_peaks import detect_peaks
-#' > x = np.random.randn(100)
-#' > x[60:81] = np.nan
-#' > # detect all peaks and plot data
-#' > ind = detect_peaks(x, show=True)
-#' > print(ind)
+#'  x = rnorm(100)
+#'  x[60:81] = NA
+#'  # detect all peaks and plot data
+#'  ind = detect_peaks(x, show=TRUE)
+#'  print(ind)
 #'
-#' > x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-#' > # set minimum peak height = 0 and minimum peak distance = 20
-#' > detect_peaks(x, mph=0, mpd=20, show=True)
+#'  x = sin(2*pi*5*seq(0,1,length.out=200)) + rnorm(200)/5
+#'  # set minimum peak height = 0 and minimum peak distance = 20
+#'  detect_peaks(x, mph=0, mpd=20, show=TRUE)
 #'
-#' > x = [0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0]
-#' > # set minimum peak distance = 2
-#' > detect_peaks(x, mpd=2, show=True)
+#'  x = c(0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0)
+#'  # set minimum peak distance = 2
+#'  detect_peaks(x, mpd=2, show=TRUE)
 #'
-#' > x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-#' > # detection of valleys instead of peaks
-#' > detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
+#'  x = sin(2*pi*5*seq(0, 1, length.out=200)) + rnorm(200)/5
+#'  # detection of valleys instead of peaks
+#'  detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
 #'
-#' > x = [0, 1, 1, 0, 1, 1, 0]
-#' > # detect both edges
-#' > detect_peaks(x, edge='both', show=True)
+#'  x =c(0, 1, 1, 0, 1, 1, 0)
+#'  # detect both edges
+#'  detect_peaks(x, edge='both', show=TRUE)
 #'
-#' > x = [-2, 1, -2, 2, 1, 1, 3, 0]
-#' > # set threshold = 2
-#' > detect_peaks(x, threshold = 2, show=True)
+#'  x =c(-2, 1, -2, 2, 1, 1, 3, 0)
+#'  # set threshold = 2
+#'  detect_peaks(x, threshold = 2, show=TRUE)
 detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
                         kpsh = FALSE, valley = FALSE) {
   x = as.vector(x)
@@ -56,39 +55,39 @@ detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
     }
   }
   dx = x[2:length(x)] - x[1:(length(x)-1)]
-  indna <- where(is.na(x))
+  indna <- which(is.na(x))
   if(length(indna)>0){
     x[indna] <- Inf
-    dx[where(is.na(dx))] <- Inf
+    dx[which(is.na(dx))] <- Inf
   }
   ine <- numeric()
   ire <- numeric()
   ife <- numeric()
-  if(!edge){
-    ine = where((c(dx, 0) < 0) & (c(0, dx) > 0))
+  if(is.na(edge)){
+    ine = which((c(dx, 0) < 0) & (c(0, dx) > 0))
   } else {
     if(tolower(edge) %in% c('rising','both')){
-      ire = where((c(dx, 0) <= 0) & (c(0, dx)>0))
+      ire = which((c(dx, 0) <= 0) & (c(0, dx)>0))
     }
     if(tolower(edge) %in% c('falling','both')){
-      ife = where((c(dx, 0) < 0) & (c(0, dx) >= 0))
+      ife = which((c(dx, 0) < 0) & (c(0, dx) >= 0))
     }
   }
-  ind = unique(c(ine, ire, ife))
+  ind = sort(unique(c(ine, ire, ife)))
   if (length(ind) > 0 & length(indna) > 0){
-   ind <- ind[setdiff(ind, unique(c(indna, indna-1, indna+1)))]
+   ind <- setdiff(ind, unique(c(indna, indna-1, indna+1)))
   }
-  if (length(ind) > 0 & ind[0] == 0){
-    ind = ind[1:length(ind)]
+  if (length(ind) > 0 & ind[1] == 1){ # Check if peak is at first data point
+    ind = ind[2:length(ind)]
   }
-  if(length(ind) > 0 & ind[length(ind)] == length(ind)-1){
+  if(length(ind) > 0 & ind[length(ind)] == length(x)){ # check if peak is at last data point
     ind = ind[1:(length(ind)-1)]
   }
   if (length(ind) > 0 & !is.na(mph)){
     ind = ind[x[ind] >= mph]
   }
   if (length(ind) > 0 & threshold > 0){
-    dx = min(c(x[ind] - x[ind-1], x[ind]- x[ind+1]))
+    dx = apply(rbind(x[ind] - x[ind-1], x[ind]- x[ind+1]), 2,min)
     ind = ind[dx >= threshold]
   }
   if (length(ind) > 0 & mpd > 1){
