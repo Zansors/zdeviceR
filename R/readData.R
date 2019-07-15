@@ -19,7 +19,22 @@
 #' motion_data <- dat[['Motion']]
 #' start_time <- dat[['timestamp']]
 #'
-readData <- function(filename, sound_rate=256, accel_rate = 10){
+readData <- function(filename, sound_rate=256, accel_rate = 10, test_grep=F){
+  if(test_grep){
+    require(data.table)
+    require(glue)
+    filename <- stringr::str_replace_all(filename, ' ', '\\\\ ')
+    cmd1 <- glue("grep A {filename}")
+    cmd2 <- glue("grep -v A {filename} | sed '1,4d' | sed '/^[[:space:]]*$/d'")
+    sound <- as.data.frame(fread(cmd = cmd1))
+    motion <- as.data.frame(fread(cmd = cmd2))
+    sound_dat <- processSound(sound)
+    accel_dat <- processAccel(motion)
+    timestamp <- c(
+      'date' = readLines(pipe(glue("grep -Eo '\\d{{2}}/\\d{{2}}/\\d{{2}}' {filename}"))),
+      'time' = readLines(pipe(glue("grep -Eo '\\d{{2}}:\\d{{2}}:\\d{{2}}' {filename}")))
+    )
+  }
   dat <- read_file_cpp2(path.expand(filename))
   dat <- strsplit(dat, '\\r|\\n')[[1]]
   dat <- dat[dat!='']
