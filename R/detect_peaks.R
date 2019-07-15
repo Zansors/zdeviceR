@@ -11,6 +11,7 @@
 #' @param edge One of NA, `rising`, `falling` or `both`, optional (default = `rising`). for a flat peak, keep only the rising edge ('rising'), only the falling edge ('falling'), both edges ('both'), or don't detect a flat peak (None).
 #' @param kpsh Boolean, optional (default = FALSE). Keep peaks with same height even if they are closer than `mpd`
 #' @param valley Boolean, optional (default = FALSE). If TRUE, detect valleys (local minima) instead of peaks (local maxima)
+#' @param mpd_from_start Boolean (default = TRUE) Should we start counting from beginning, or compute from highest peak (FALSE)
 #'
 #' @return a 1-d array with indices of the peaks in `x`
 #' @export
@@ -43,7 +44,7 @@
 #'  # set threshold = 2
 #'  detect_peaks(x, threshold = 2, show=TRUE)
 detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
-                        kpsh = FALSE, valley = FALSE) {
+                        kpsh = FALSE, valley = FALSE, mpd_from_start = TRUE) {
   x = as.vector(x)
   if (length(x) < 3){
     return(integer(0))
@@ -91,7 +92,9 @@ detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
     ind = ind[dx >= threshold]
   }
   if (length(ind) > 0 & mpd > 1){
-    ind <- ind[rev(order(x[ind]))]
+    if(!mpd_from_start){
+      ind <- ind[rev(order(x[ind]))]
+    }
     idel <- rep(0, length(ind))
     for (i in 1:length(ind)){
       if(!idel[i]){
