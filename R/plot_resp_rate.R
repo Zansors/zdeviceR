@@ -9,7 +9,8 @@
 plot_resp_rate <- function(d){
   require(ggplot2)
   require(glue)
-  plt <- ggplot(d, aes(x = mins, y = respiration_rate)) +
+  plt <- ggplot(filter(d, mins < max(mins,na.rm=T) - 2),
+                aes(x = mins, y = respiration_rate)) +
     geom_line() +
     ylim(0,40) +
     labs(x = 'Minutes', y = 'Breathing rate') +
