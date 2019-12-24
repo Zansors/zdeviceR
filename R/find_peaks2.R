@@ -17,32 +17,32 @@
 #'
 #' @examples
 #'
-#' > from detect_peaks import detect_peaks
-#' > x = np.random.randn(100)
-#' > x[60:81] = np.nan
-#' > # detect all peaks and plot data
-#' > ind = detect_peaks(x, show=True)
-#' > print(ind)
+#'  from detect_peaks import detect_peaks
+#'  x = rnorm(100)
+#'  x[60:81] = NA
+#'  # detect all peaks and plot data
+#'  ind = detect_peaks(x, show=TRUE)
+#'  print(ind)
 #'
-#' > x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-#' > # set minimum peak height = 0 and minimum peak distance = 20
-#' > detect_peaks(x, mph=0, mpd=20, show=True)
+#'  x = sin(2*pi*5*seq(0,1,length.out=200)) + rnorm(200)/5
+#'  # set minimum peak height = 0 and minimum peak distance = 20
+#'  detect_peaks(x, mph=0, mpd=20, show=TRUE)
 #'
-#' > x = [0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0]
-#' > # set minimum peak distance = 2
-#' > detect_peaks(x, mpd=2, show=True)
+#'  x = c(0, 1, 0, 2, 0, 3, 0, 2, 0, 1, 0)
+#'  # set minimum peak distance = 2
+#'  detect_peaks(x, mpd=2, show=TRUE)
 #'
-#' > x = np.sin(2*np.pi*5*np.linspace(0, 1, 200)) + np.random.randn(200)/5
-#' > # detection of valleys instead of peaks
-#' > detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
+#'  x = sin(2*pi*5*seq(0, 1, length.out=200)) + rnorm(200)/5
+#'  # detection of valleys instead of peaks
+#'  detect_peaks(x, mph=-1.2, mpd=20, valley=True, show=True)
 #'
-#' > x = [0, 1, 1, 0, 1, 1, 0]
-#' > # detect both edges
-#' > detect_peaks(x, edge='both', show=True)
+#'  x =c(0, 1, 1, 0, 1, 1, 0)
+#'  # detect both edges
+#'  detect_peaks(x, edge='both', show=TRUE)
 #'
-#' > x = [-2, 1, -2, 2, 1, 1, 3, 0]
-#' > # set threshold = 2
-#' > detect_peaks(x, threshold = 2, show=True)
+#'  x =c(-2, 1, -2, 2, 1, 1, 3, 0)
+#'  # set threshold = 2
+#'  detect_peaks(x, threshold = 2, show=TRUE)
 detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
                         kpsh = FALSE, valley = FALSE) {
   x = as.vector(x)
@@ -56,32 +56,32 @@ detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
     }
   }
   dx = x[2:length(x)] - x[1:(length(x)-1)]
-  indna <- where(is.na(x))
+  indna <- which(is.na(x))
   if(length(indna)>0){
     x[indna] <- Inf
-    dx[where(is.na(dx))] <- Inf
+    dx[which(is.na(dx))] <- Inf
   }
   ine <- numeric()
   ire <- numeric()
   ife <- numeric()
-  if(!edge){
-    ine = where((c(dx, 0) < 0) & (c(0, dx) > 0))
+  if(is.na(edge)){
+    ine = which((c(dx, 0) < 0) & (c(0, dx) > 0))
   } else {
     if(tolower(edge) %in% c('rising','both')){
-      ire = where((c(dx, 0) <= 0) & (c(0, dx)>0))
+      ire = which((c(dx, 0) <= 0) & (c(0, dx)>0))
     }
     if(tolower(edge) %in% c('falling','both')){
-      ife = where((c(dx, 0) < 0) & (c(0, dx) >= 0))
+      ife = which((c(dx, 0) < 0) & (c(0, dx) >= 0))
     }
   }
-  ind = unique(c(ine, ire, ife))
+  ind = sort(unique(c(ine, ire, ife)))
   if (length(ind) > 0 & length(indna) > 0){
-   ind <- ind[setdiff(ind, unique(c(indna, indna-1, indna+1)))]
+   ind <- setdiff(ind, unique(c(indna, indna-1, indna+1)))
   }
-  if (length(ind) > 0 & ind[0] == 0){
-    ind = ind[1:length(ind)]
+  if (length(ind) > 0 & ind[1] == 1){
+    ind = ind[2:length(ind)]
   }
-  if(length(ind) > 0 & ind[length(ind)] == length(ind)-1){
+  if(length(ind) > 0 & ind[length(ind)] == length(x)){
     ind = ind[1:(length(ind)-1)]
   }
   if (length(ind) > 0 & !is.na(mph)){
