@@ -5,19 +5,23 @@
 #' Version: 1.0
 #'
 #' @param x 1-d array
-#' @param mph (NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if `valley=F`) or peaks that are smaller than maximum peak height (if `valley=T`)
+#' @param mph (NA, number), optional (default = NA). Detect peaks wthat are greater than minimum peak height (if `valley=F`) or peaks that are smaller than minimum peak height (if `valley=T`)
 #' @param mpd positive integer, optional (default = 1). Detect peaks that are at least separated by minimum peak distance (in number of data)
 #' @param threshold positive number, optional (default = 0). Detect peaks (valleys) that are greater (smaller) than  `threshold` in relation to their immediate neighbors
 #' @param edge One of NA, `rising`, `falling` or `both`, optional (default = `rising`). for a flat peak, keep only the rising edge ('rising'), only the falling edge ('falling'), both edges ('both'), or don't detect a flat peak (None).
 #' @param kpsh Boolean, optional (default = FALSE). Keep peaks with same height even if they are closer than `mpd`
 #' @param valley Boolean, optional (default = FALSE). If TRUE, detect valleys (local minima) instead of peaks (local maxima)
+#' @param mpd_from_start Boolean (default = TRUE) Should we start counting from beginning, or compute from highest peak (FALSE)
 #'
 #' @return a 1-d array with indices of the peaks in `x`
 #' @export
 #'
 #' @examples
 #'
+<<<<<<< HEAD:R/find_peaks2.R
 #'  from detect_peaks import detect_peaks
+=======
+>>>>>>> f2772d9f38d4a5142596f0b1133a95dba536f9b8:R/detect_peaks.R
 #'  x = rnorm(100)
 #'  x[60:81] = NA
 #'  # detect all peaks and plot data
@@ -44,7 +48,7 @@
 #'  # set threshold = 2
 #'  detect_peaks(x, threshold = 2, show=TRUE)
 detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
-                        kpsh = FALSE, valley = FALSE) {
+                        kpsh = FALSE, valley = FALSE, mpd_from_start = TRUE) {
   x = as.vector(x)
   if (length(x) < 3){
     return(integer(0))
@@ -78,21 +82,23 @@ detect_peaks <- function(x, mph = NA, mpd = 1, threshold=0, edge = 'rising',
   if (length(ind) > 0 & length(indna) > 0){
    ind <- setdiff(ind, unique(c(indna, indna-1, indna+1)))
   }
-  if (length(ind) > 0 & ind[1] == 1){
+  if (length(ind) > 0 & ind[1] == 1){ # Check if peak is at first data point
     ind = ind[2:length(ind)]
   }
-  if(length(ind) > 0 & ind[length(ind)] == length(x)){
+  if(length(ind) > 0 & ind[length(ind)] == length(x)){ # check if peak is at last data point
     ind = ind[1:(length(ind)-1)]
   }
   if (length(ind) > 0 & !is.na(mph)){
     ind = ind[x[ind] >= mph]
   }
   if (length(ind) > 0 & threshold > 0){
-    dx = min(c(x[ind] - x[ind-1], x[ind]- x[ind+1]))
+    dx = apply(rbind(x[ind] - x[ind-1], x[ind]- x[ind+1]), 2,min)
     ind = ind[dx >= threshold]
   }
   if (length(ind) > 0 & mpd > 1){
-    ind <- ind[rev(order(x[ind]))]
+    if(!mpd_from_start){
+      ind <- ind[rev(order(x[ind]))]
+    }
     idel <- rep(0, length(ind))
     for (i in 1:length(ind)){
       if(!idel[i]){

@@ -4,7 +4,7 @@
 \alias{readData}
 \title{Reading data from zdevice}
 \usage{
-readData(filename, sound_rate = 256, accel_rate = 10)
+readData(filename, sound_rate = 256, accel_rate = 10, test_grep = F)
 }
 \arguments{
 \item{filename}{A string with the path to the data file}
